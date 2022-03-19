@@ -1,20 +1,46 @@
 import 'package:flutter/material.dart';
+import './question.dart';
+import './answer.dart';
 
 // void main() {
 //   runApp(MyApp());
 // }
 
 void main() => runApp(MyApp());
-void answerQuestion() {
-  print('Answer chosen!');
+
+class MyApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _MyAppState();
+  }
 }
 
-class MyApp extends StatelessWidget {
+class _MyAppState extends State<MyApp> {
+  var _questionIndex = 0;
+
+  void _answerQuestion() {
+    setState(() {
+      _questionIndex = _questionIndex + 1;
+    });
+    print(_questionIndex);
+  }
+
   @override //데코레이터
   Widget build(BuildContext context) {
     var questions = [
-      'What\'s your favorite color?',
-      'What\'s your favorite animal?',
+      {
+        'questionText': 'What\'s your favorite color?',
+        'answers': ['Black', 'Red', 'Green', 'White'],
+      },
+      {
+        'questionText': 'What\'s your favorite animal?',
+        'answers': ['Dog', 'Cat', 'Rabbit', 'Elephant'],
+      },
+      {
+        'questionText': 'What\'s your favorite hobby?',
+        'answers': ['Game', 'Sing', 'Exercise', 'Sleep'],
+      },
     ];
     return MaterialApp(
       home: Scaffold(
@@ -23,20 +49,13 @@ class MyApp extends StatelessWidget {
         ),
         body: Column(
           children: [
-            Text('The question!'),
-            RaisedButton(
-              child: Text('Answer 1'),
-              onPressed: answerQuestion,
+            Question(
+              questions[_questionIndex]['questionText'],
             ),
-            RaisedButton(
-              child: Text('Answer 2'),
-              onPressed: answerQuestion,
-            ),
-            RaisedButton(
-              child: Text('Answer 3'),
-              onPressed: answerQuestion,
-            ),
-            // Flutter2 부터는 ElevatedButton이 사용되지만 원래의 코드를 위해서 잠시 사용
+            ...(questions[_questionIndex]['answers'] as List<String>)
+                .map((answer) {
+              return Answer(_answerQuestion, answer);
+            }).toList()
           ],
         ),
       ),
